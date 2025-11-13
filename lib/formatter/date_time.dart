@@ -1,54 +1,75 @@
-/// Lightweight token-based formatter for building deterministic timestamps
-/// without pulling in the heavier `intl` dependency.
+/// Lightweight token-based formatter for rendering [Duration] values without
+/// requiring the heavier `intl` dependency.
 class DraftModeFormatterDateTime {
   const DraftModeFormatterDateTime._();
 
-  /// Recognizes every supported token. Longer tokens are listed first so the
-  /// regexp never partially matches (e.g. `YYYY` before `YY`).
-  static final RegExp _tokenMatcher = RegExp('YYYY|YY|MM|DD|HH|hh|mm|ss');
+  /// Recognizes the supported duration tokens.
+  static final RegExp _tokenMatcher = RegExp('DD|HH|mm|ss');
 
-  /// Formats a [DateTime] using the provided [pattern].
+  /// Formats a [Duration] using the provided [pattern].
   ///
-  /// Supported tokens mirror a subset of `intl`'s `DateFormat` implementation:
-  /// `YYYY`, `YY`, `MM`, `DD`, `HH`, `hh`, `mm`, `ss`.
+  /// Tokens:
+  /// - `DD`: total days (zero padded to 2+ digits)
+  /// - `HH`: hours remainder after days
+  /// - `mm`: minutes remainder after hours
+  /// - `ss`: seconds remainder after minutes
   /// Any other character sequence remains untouched, enabling literal text
-  /// such as `Report YYYY-MM-DD at HH:mm UTC`.
-  static String duration(DateTime value, {required String pattern}) {
+  /// such as `ETA DD days HH:mm:ss`.
+  static String duration(Duration value, {required String pattern}) {
+    if (value.isNegative) {
+      throw ArgumentError.value(value, 'value', 'Duration must be positive');
+    }
+
+    final segments = _DurationSegments.fromDuration(value);
     return pattern.replaceAllMapped(
       _tokenMatcher,
-      (match) => _resolveDateToken(value, match[0]!),
+      (match) => _resolveDateToken(segments, match[0]!),
     );
   }
 
-  /// Resolves a single formatting [token] into the corresponding [DateTime]
-  /// component represented as zero-padded text.
-  static String _resolveDateToken(DateTime value, String token) {
+  /// Resolves a single formatting [token] into the corresponding component.
+  static String _resolveDateToken(_DurationSegments segments, String token) {
     switch (token) {
-      case 'YYYY':
-        return _fourDigits(value.year);
-      case 'YY':
-        return _twoDigits(value.year % 100);
-      case 'MM':
-        return _twoDigits(value.month);
       case 'DD':
-        return _twoDigits(value.day);
+        return _padNumber(segments.days, width: 2);
       case 'HH':
-        return _twoDigits(value.hour);
-      case 'hh':
-        final hour = value.hour % 12 == 0 ? 12 : value.hour % 12;
-        return _twoDigits(hour);
+        return _padNumber(segments.hours, width: 2);
       case 'mm':
-        return _twoDigits(value.minute);
+        return _padNumber(segments.minutes, width: 2);
       case 'ss':
-        return _twoDigits(value.second);
+        return _padNumber(segments.seconds, width: 2);
       default:
         return token;
     }
   }
 
-  /// Pads a number to two digits (e.g. `4 -> 04`).
-  static String _twoDigits(int number) => number.toString().padLeft(2, '0');
+  static String _padNumber(int number, {int width = 2}) =>
+      number.toString().padLeft(width, '0');
+}
 
-  /// Pads a number to four digits (e.g. `42 -> 0042`).
-  static String _fourDigits(int number) => number.toString().padLeft(4, '0');
+class _DurationSegments {
+  const _DurationSegments({
+    required this.days,
+    required this.hours,
+    required this.minutes,
+    required this.seconds,
+  });
+
+  final int days;
+  final int hours;
+  final int minutes;
+  final int seconds;
+
+  factory _DurationSegments.fromDuration(Duration duration) {
+    final days = duration.inDays;
+    final hours = duration.inHours % 24;
+    final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
+    return _DurationSegments(
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    );
+  }
 }

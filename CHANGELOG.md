@@ -2,11 +2,14 @@
 ### Added
 - Provide a dedicated README that explains the formatter package layout, setup commands, and contribution workflow.
 
+### Breaking
+- `DraftModeFormatterDateTime.duration` now expects a `Duration` input and focuses on elapsed-time tokens (`DD`, `HH`, `mm`, `ss`).
+
 ### Changed
 - Document how the shared DraftMode example shell loads its assets and ensure the example `.gitignore` only tracks source files.
 - Add repo-level ignore rules so generated Flutter/PODS artifacts from `example/ios` stay out of version control.
 - Summarize the README's example section now that the local `lib/widget/page.dart` scaffold moved into the shared package.
-- Expand formatter inline documentation and tests so every supported token is covered with behavior-driven specs.
+- Expand formatter inline documentation and tests so every supported duration token is covered with behavior-driven specs.
 
 ## 0.1.0
 - Initial public release of DraftMode Worker
