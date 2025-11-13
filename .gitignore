@@ -1,0 +1,33 @@
+# IDE and tooling metadata
+/.idea/
+*.iml
+
+# Core Flutter/Dart build outputs
+/.dart_tool/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.metadata
+/build/
+/doc/api/
+/coverage/
+flutter_*.log
+
+# Example application artifacts
+/example/.dart_tool/
+/example/.flutter-plugins
+/example/.flutter-plugins-dependencies
+/example/.metadata
+/example/.packages
+/example/.pub/
+/example/.pub-cache/
+/example/build/
+/example/coverage/
+/example/pubspec.lock
+
+# Example iOS build outputs
+/example/ios/.dart_tool/
+/example/ios/.symlinks/
+/example/ios/Flutter/
+/example/ios/Podfile.lock
+/example/ios/Pods/
+/example/ios/Runner/GeneratedPluginRegistrant.*
