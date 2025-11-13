@@ -1,4 +1,4 @@
-import 'package:draftmode_formatter/formatter/date_time.dart';
+import 'package:draftmode_formatter/formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
