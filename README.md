@@ -8,6 +8,10 @@ Add the package to your `pubspec.yaml` and import the facade entry point:
 ```dart
 import 'package:draftmode_formatter/formatter/date_time.dart';
 ```
+or the full set via
+```dart
+import 'package:draftmode_formatter/formatter.dart';
+```
 
 ## Usage
 The `DraftModeFormatterDateTime.duration` method accepts any `DateTime` plus a tokenized pattern. Literal text stays untouched, so you can mix placeholders with explanatory strings:
