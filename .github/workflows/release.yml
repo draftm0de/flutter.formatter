@@ -1,0 +1,11 @@
+name: Release Tagging
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    uses: draftm0de/flutter/.github/workflows/release.yml@main
+    with:
+      pubspec-path: packages/app/pubspec.yaml  # optional override
