@@ -1,6 +1,6 @@
 name: draftmode_formatter
 description: Collection of lightweight formatters
-version: 0.1.0
+version: 0.0.0+1
 homepage: https://draftmode.io/dev/flutter/formatter
 license: MIT
 
